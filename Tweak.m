@@ -5,7 +5,9 @@
 
 #include "kexploit/kexploit_opa334.h"
 #include "kexploit/kutils.h"
+#include "kexploit/sandbox.h"
 #include "sandbox_escape.h"
+#include "SSV/SSVUtils.h"
 
 #pragma mark - Root Helper Hooks
 
@@ -479,6 +481,30 @@ static void hook_activationViewDidLoad(id self, SEL _cmd) {
     NSLog(@"[Tweak] Suppressed activation nag");
 }
 
+#pragma mark - SSV Hooks
+
+static IMP orig_createFileAtPath = NULL;
+static BOOL hook_createFileAtPath(id self, SEL _cmd, NSString *path, NSData *contents, NSDictionary *attributes) {
+    BOOL result = ((BOOL(*)(id,SEL,id,id,id))orig_createFileAtPath)(self, _cmd, path, contents, attributes);
+    if (result && [path hasPrefix:@"/System"]) {
+        // Chown to root for SSV-protected files
+        ssv_chown_root([path UTF8String]);
+        NSLog(@"[Tweak] Chowned to root: %@", path);
+    }
+    return result;
+}
+
+static IMP orig_writeToFile = NULL;
+static BOOL hook_writeToFile(id self, SEL _cmd, NSString *path, unsigned long long options, NSError **error) {
+    BOOL result = ((BOOL(*)(id,SEL,id,unsigned long long,id*))orig_writeToFile)(self, _cmd, path, options, error);
+    if (result && [path hasPrefix:@"/System"]) {
+        // Chown to root for SSV-protected files
+        ssv_chown_root([path UTF8String]);
+        NSLog(@"[Tweak] Chowned to root: %@", path);
+    }
+    return result;
+}
+
 #pragma mark - Hook Installation
 
 static void installHooks(void) {
@@ -547,6 +573,18 @@ static void installHooks(void) {
         if (m) { orig_didSelectItem = method_getImplementation(m); method_setImplementation(m, (IMP)hook_didSelectItem); }
     }
 
+    // SSV write and chown hooks
+    Class fm = [NSFileManager class];
+    if (fm) {
+        Method m = class_getInstanceMethod(fm, @selector(createFileAtPath:contents:attributes:));
+        if (m) { orig_createFileAtPath = method_getImplementation(m); method_setImplementation(m, (IMP)hook_createFileAtPath); }
+    }
+    Class dataClass = [NSData class];
+    if (dataClass) {
+        Method m = class_getInstanceMethod(dataClass, @selector(writeToFile:options:error:));
+        if (m) { orig_writeToFile = method_getImplementation(m); method_setImplementation(m, (IMP)hook_writeToFile); }
+    }
+
     NSLog(@"[Tweak] All hooks installed");
 }
 
@@ -564,6 +602,13 @@ static void runExploit(void) {
     uint64_t self_proc_addr = proc_self();
     int sret = sandbox_escape(self_proc_addr);
     NSLog(@"[Tweak] sandbox_escape returned %d", sret);
+
+    // Enable SSV write access
+    int pret = patch_sandbox_ext();
+    NSLog(@"[Tweak] patch_sandbox_ext returned %d", pret);
+    if (pret == 0) {
+        NSLog(@"[Tweak] SSV-protected area write access enabled");
+    }
 }
 
 #pragma mark - Entry Point
