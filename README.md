@@ -10,20 +10,18 @@ Now includes SSV-protected area write access with root privileges.
 - Root helper bypass
 - Zip/unzip hooks
 - License/integrity bypass
-- Bypass Filza padlock: lets you try to create and edit files even without permission
-- **SSV-protected area write access**: Allows writing to system-protected areas (e.g. "/System/Library/Keychains")
-- **Root privileges on created files**: Automatically "chown" files created in protected areas to root with write permissions
+- Bypass Filza padlock: lets you try to create and edit files even without permission (Broken?)
+- **SSV-protected area write access**: Allows writing to system-protected areas
+- **Root privileges on created files**: Automatically chown files created in protected areas to root with write permissions
 
 ## Known Issues
 - Filza may take 2–3 attempts before working (you can check the logs in "/tmp" inside the Filza sandbox)
-- Bypass Filza padlock seems broken on some devices
-- SSV-Bypass is still in development and may not work most of the time
 
 ## WARNING
 This is a pre-release build. Most exploits are still unstable and do not always work.  
 This build is for testing purposes only. Do **not** expect it to work perfectly.
 
-If it works for you, please contact me on X with your logs.  
+If it works for you, please contact [me](https://x.com/XEmaz_) with your logs.  
 If it doesn’t work, feel free to open an issue on GitHub, but **do not** contact me directly — this is a testing build.
 
 **Note about iPhone 17 series and iPad M5**: It will **not** work because of MTE. Starting with the iPhone 17 and M5 chips, Apple added MTE which blocks kernel read/write access.
@@ -35,4 +33,5 @@ If it doesn’t work, feel free to open an issue on GitHub, but **do not** conta
 - [CrazyMind90](https://github.com/crazymind90/) – idea to get sbx token with krw only
 - [Huy Nguyen](https://github.com/34306/) – original repo
 - [Grok](https://grok.com) and [Claude](https://claude.ai/) – assistance with the implementation
-- And me
+- And [me](https://x.com/XEmaz_)
+- 
