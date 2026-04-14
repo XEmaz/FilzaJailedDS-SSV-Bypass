@@ -1,33 +1,38 @@
 # FilzaJailedDS
-Filza Jailed Darksword, support iOS 17.0-26.0.1 (except 18.7.2-18.7.7). This repo open source the tweak inject into the Filza iPA (4.0.0 and back, 4.0.2 seems crash something)
+
+Filza Jailed Darksword – supports iOS 17.0–18.0.1 (except 18.7.2–18.7.7).  
+This repository open-sources the tweak injected into the Filza IPA (version 4.0.0 and earlier; 4.0.2 appears to cause crashes).
+
 Now includes SSV-protected area write access with root privileges.
 
 ## Features
 - Sandbox escape via kernel exploit
 - Root helper bypass
 - Zip/unzip hooks
-- Bypass Filza padlock: lets you TRY to create and edit file even without permission
 - License/integrity bypass
-- **SSV-protected area write access**: Allows writing to system-protected areas like /System/Library/Keychains
-- **Root privileges on created files**: Automatically chown files created in protected areas to root with write permissions
+- Bypass Filza padlock: lets you try to create and edit files even without permission
+- **SSV-protected area write access**: Allows writing to system-protected areas (e.g. "/System/Library/Keychains")
+- **Root privileges on created files**: Automatically "chown" files created in protected areas to root with write permissions
 
-##  Known Issues
-- Filza may take 2/3 tries before working (you can chek the logs on /tmp in the Filza sandbox)
-- Bypass Filza padlock seems broken in some devices
+## Known Issues
+- Filza may take 2–3 attempts before working (you can check the logs in "/tmp" inside the Filza sandbox)
+- Bypass Filza padlock seems broken on some devices
 - SSV-Bypass is still in development and may not work most of the time
 
 ## WARNING
-This is a pre-release build, so most of the exploits are still broken and don't always work. This build is for testing purpose, do not expect it to works perfecly, if you test this and it ends up working please contact [me](https://x.com/XEmaz_) with your logs, if it doesn't work make a issue on github if you want but do NOT contac me this is a pre-release for testing.
+This is a pre-release build. Most exploits are still unstable and do not always work.  
+This build is for testing purposes only. Do **not** expect it to work perfectly.
 
+If it works for you, please contact me on X with your logs.  
+If it doesn’t work, feel free to open an issue on GitHub, but **do not** contact me directly — this is a testing build.
 
-About iPhone 17 series and iPad M5: IT WON'T WORK because of MTE. Starting from iPhone 17 and M5 chip, Apple added MTE to block anyone trying to access krw, so it will not work
+**Note about iPhone 17 series and iPad M5**: It will **not** work because of MTE. Starting with the iPhone 17 and M5 chips, Apple added MTE which blocks kernel read/write access.
 
-
-# Credit
-- Thanks to [Duy Tran](https://github.com/khanhduytran0) for the sandbox hook token
-- Thanks to [wh1te4ever](https://github.com/wh1te4ever/) for the super details [darksword-kfun](https://github.com/wh1te4ever/darksword-kexploit-fun) with offset/XPF
-- Thanks to [opa334](https://github.com/opa334/) for the XPF/krw
-- Thanks to [CrazyMind90](https://github.com/crazymind90/) for idea how to get sbx token with krw only
-- Thanks to [Huy Nguyen](https://github.com/34306/) for the original repo
-- Thanks to [Grok](https://grok.com) and [Claude](https://claude.ai/) for assisting me with the implementation
-- And me 
+## Credits
+- [Duy Tran](https://github.com/khanhduytran0) – sandbox hook token
+- [wh1te4ever](https://github.com/wh1te4ever/) – darksword-kfun with offset/XPF
+- [opa334](https://github.com/opa334/) – XPF/krw
+- [CrazyMind90](https://github.com/crazymind90/) – idea to get sbx token with krw only
+- [Huy Nguyen](https://github.com/34306/) – original repo
+- [Grok](https://grok.com) and [Claude](https://claude.ai/) – assistance with the implementation
+- And me
