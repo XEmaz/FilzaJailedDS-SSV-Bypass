@@ -24,6 +24,7 @@
  */
 
 #import <Foundation/Foundation.h>
+#import <stdbool.h>
 #include <fcntl.h>
 #include <unistd.h>
 #include <errno.h>

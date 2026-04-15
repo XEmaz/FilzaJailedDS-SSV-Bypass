@@ -2,6 +2,7 @@
 #define sandbox_escape_h
 
 #include <stdint.h>
+#include <stdbool.h>
 
 // Escape sandbox by rewriting sandbox extension data in kernel memory.
 // Walk: proc_ro -> ucred -> cr_label -> sandbox -> ext_set -> ext_table -> ext -> data

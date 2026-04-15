@@ -9,19 +9,22 @@ TWEAK_NAME = FilzaApplySandboxExt
 FilzaApplySandboxExt_FILES = Tweak.m sandbox_escape.m
 
 # --- kexploit ---
-FilzaApplySandboxExt_FILES += kexploit/kexploit_opa334.m kexploit/krw.m kexploit/kutils.m kexploit/offsets.m kexploit/vnode.m kexploit/file.m kexploit/vnode_research.m kexploit/sandbox.m kexploit/RemoteCall.m kexploit/PAC.m 
+FilzaApplySandboxExt_FILES += kexploit/kexploit_opa334.m kexploit/krw.m kexploit/kutils.m kexploit/offsets.m kexploit/vnode.m kexploit/file.m kexploit/vnode_research.m kexploit/sandbox.m kexploit/Exception.m kexploit/Thread.m kexploit/VM.m kexploit/MigFilterBypassThread.m kexploit/RemoteCall.m kexploit/PAC.m 
 
 # --- SSV Bypass ---
 FilzaApplySandboxExt_FILES += SSV/SSVUtils.m
 
 # --- utils ---
-FilzaApplySandboxExt_FILES += utils/file.c utils/hexdump.c utils/process.c
+FilzaApplySandboxExt_FILES += utils/hexdump.c utils/process.c utils/permission_utils.m
 
 # --- kpf ---
 FilzaApplySandboxExt_FILES += kpf/patchfinder.m
 
 # --- XPF ---
 FilzaApplySandboxExt_FILES += XPF/src/xpf.c XPF/src/common.c XPF/src/decompress.c XPF/src/bad_recovery.c XPF/src/non_ppl.c XPF/src/ppl.c
+
+# --- Filza Padlock Bypass ---
+FilzaApplySandboxExt_FILES += FilzaPadlockBypass.m
 
 # --- ChOma ---
 FilzaApplySandboxExt_FILES += XPF/external/ChOma/src/arm64.c XPF/external/ChOma/src/Base64.c XPF/external/ChOma/src/BufferedStream.c XPF/external/ChOma/src/CodeDirectory.c XPF/external/ChOma/src/CSBlob.c XPF/external/ChOma/src/DER.c XPF/external/ChOma/src/DyldSharedCache.c XPF/external/ChOma/src/Entitlements.c XPF/external/ChOma/src/Fat.c XPF/external/ChOma/src/FileStream.c XPF/external/ChOma/src/Host.c XPF/external/ChOma/src/MachO.c XPF/external/ChOma/src/MachOLoadCommand.c XPF/external/ChOma/src/MemoryStream.c XPF/external/ChOma/src/PatchFinder.c XPF/external/ChOma/src/PatchFinder_arm64.c XPF/external/ChOma/src/Util.c
