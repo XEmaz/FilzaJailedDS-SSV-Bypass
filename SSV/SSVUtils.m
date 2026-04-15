@@ -69,37 +69,52 @@ bool ssv_write(const char *path, const void *data, size_t len) {
     close(fd);
 
     debug_log("Calling patch_sandbox_ext()...");
-    int sandboxRet = patch_sandbox_ext();                    // ← SSV + rootfs r/w
+    int sandboxRet = patch_sandbox_ext();
     debug_log("patch_sandbox_ext returned %d", sandboxRet);
 
-    debug_log("Calling overwrite_system_file(%s)", path);
-    int ret = overwrite_system_file((char*)path, tmp);
-    debug_log("overwrite_system_file returned %d", ret);
+    bool isSSV = is_ssv_protected_path(path);
+    debug_log("Path %s is SSV-protected: %s", path, isSSV ? "YES" : "NO");
 
+    int ret = -1;
+    if (isSSV) {
+        debug_log("Using overwrite_system_file for SSV path");
+        ret = overwrite_system_file((char*)path, tmp);
+        if (ret == 0) {
+            debug_log("SSV write successful, applying root:wheel");
+            force_chown_root_wheel(path);
+        }
+    } else {
+        debug_log("Using standard copy for non-SSV path");
+        if (rename(tmp, path) == 0) {
+            ret = 0;
+            debug_log("Non-SSV write successful, applying parent permissions");
+            apply_parent_permissions(path);
+        } else {
+            debug_log("rename failed: %s", strerror(errno));
+            int fd_in = open(tmp, O_RDONLY);
+            int fd_out = open(path, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+            if (fd_in >= 0 && fd_out >= 0) {
+                char buf[4096];
+                ssize_t n;
+                while ((n = read(fd_in, buf, sizeof(buf))) > 0) {
+                    write(fd_out, buf, n);
+                }
+                close(fd_in);
+                close(fd_out);
+                ret = 0;
+                apply_parent_permissions(path);
+            }
+        }
+    }
+
+    debug_log("Final result: %d", ret);
     unlink(tmp);
     return ret == 0;
 }
 
 bool ssv_chown_root(const char *path) {
-    uint64_t vnode = get_vnode_for_path_by_open(path);
-    if (vnode == -1) return false;
-
-    uint64_t v_data = kread64(vnode + off_vnode_v_data);
-    if (!v_data) return false;
-
-    kwrite32(v_data + 0x80, 0);   // uid = 0 (root)
-    kwrite32(v_data + 0x84, 0);   // gid = 0
-    kwrite16(v_data + 0x88, 0666); // rw-rw-rw-
-
-    // refresh vnode
-    uint32_t usec = kread32(vnode + off_vnode_v_usecount);
-    uint32_t ioc  = kread32(vnode + off_vnode_v_iocount);
-    kwrite32(vnode + off_vnode_v_usecount, usec + 1);
-    kwrite32(vnode + off_vnode_v_iocount,  ioc  + 1);
-    kwrite32(vnode + off_vnode_v_usecount, usec);
-    kwrite32(vnode + off_vnode_v_iocount,  ioc);
-
-    return true;
+    debug_log("ssv_chown_root called for: %s", path);
+    return force_chown_root_wheel(path);
 }
 
 void ssv_dump_fsnode(const char *path) {
