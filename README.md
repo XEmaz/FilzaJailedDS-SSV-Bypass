@@ -10,7 +10,7 @@ Now includes SSV-protected area write access with root privileges.
 - Root helper bypass
 - Zip/unzip hooks
 - License/integrity bypass
-- Bypass Filza padlock: lets you try to create and edit files even without permission (Broken?)
+- Bypass Filza padlock: lets you **try** to create and edit files even without privileges (Broken?)
 - **SSV-protected area write access**: Allows writing to system-protected areas
 - **Root privileges on created files**: Automatically chown files created in protected areas to root with write permissions
 
