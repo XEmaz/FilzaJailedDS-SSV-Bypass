@@ -35,4 +35,3 @@ If it doesn’t work, feel free to open an issue on GitHub, but **do not** conta
 - [Huy Nguyen](https://github.com/34306/) – original repo
 - [Grok](https://grok.com) and [Claude](https://claude.ai/) – assistance with the implementation
 - And [me](https://x.com/XEmaz_)
-- 
